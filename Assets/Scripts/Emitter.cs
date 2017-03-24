@@ -15,15 +15,22 @@ public class Emitter : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	    if (HexGrid.Instance.Bubbles[Neighbor.Index] == null)
+	void Update ()
+	{
+	    var bubble = HexGrid.Instance.Bubbles[Neighbor.Index];
+
+	    if (bubble == null)
 	    {
 	        Count++;
 	        if (Count == 10)
 	        {
 	            HexGrid.Instance.CreateBubble(Index, 0, Index);
-                Count = 0;
-            }
+	            Count = 0;
+	        }
+	    }
+	    else
+	    {
+	        Count = 0;
 	    }
 	}
 }

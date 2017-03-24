@@ -11,6 +11,8 @@ public class HexCell : MonoBehaviour
 
     public int Index;
 
+    public bool Moving = false;
+
     [SerializeField]
     HexCell[] _neighbors;
 
