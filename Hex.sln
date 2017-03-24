@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hex", "Hex.csproj", "{DFBDE230-549B-E694-EBDC-0B6AB476B6A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hex.Editor", "Hex.Editor.csproj", "{31F8EA2D-B78E-98D1-A088-ED3E71CD987D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DFBDE230-549B-E694-EBDC-0B6AB476B6A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFBDE230-549B-E694-EBDC-0B6AB476B6A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFBDE230-549B-E694-EBDC-0B6AB476B6A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFBDE230-549B-E694-EBDC-0B6AB476B6A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31F8EA2D-B78E-98D1-A088-ED3E71CD987D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31F8EA2D-B78E-98D1-A088-ED3E71CD987D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31F8EA2D-B78E-98D1-A088-ED3E71CD987D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31F8EA2D-B78E-98D1-A088-ED3E71CD987D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
