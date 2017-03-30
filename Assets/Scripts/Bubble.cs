@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEditor.VersionControl;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 namespace Assets.Scripts 
 {
@@ -19,6 +20,7 @@ namespace Assets.Scripts
         public bool Merging = false;
         public float Speed = 0.5f;
         public int Index;
+        public int Count = 1;
 
         private void Update()
         {
@@ -35,43 +37,40 @@ namespace Assets.Scripts
                 {
                     Merging = false;
                     HexGrid.Instance.Bubbles[Index] = null;
-                    this.Pop();
+                    this.Destroy();
                 }
             }
-            if (!Merging && !Moving)
+            if (Merging || Moving) return;
+            var northernHexNeighbor = cell.GetNeighbor(HexDirection.N);
+            var northEasternHexNeighbor = cell.GetNeighbor(HexDirection.NE);
+            var northWesternHexNeighbor = cell.GetNeighbor(HexDirection.NW);
+            if (northernHexNeighbor != null && HexGrid.Instance.Bubbles[northernHexNeighbor.Index] == null)
             {
-                var northernHexNeighbor = cell.GetNeighbor(HexDirection.N);
-                var northEasternHexNeighbor = cell.GetNeighbor(HexDirection.NE);
-                var northWesternHexNeighbor = cell.GetNeighbor(HexDirection.NW);
-                if (northernHexNeighbor != null && HexGrid.Instance.Bubbles[northernHexNeighbor.Index] == null)
-                {
-                    Replace(northernHexNeighbor);
-                }
-                else if (northEasternHexNeighbor != null &&
-                    HexGrid.Instance.Bubbles[northEasternHexNeighbor.Index] != null &&
-                    HexGrid.Instance.Bubbles[northEasternHexNeighbor.Index].Color == Color &&
-                    !northEasternHexNeighbor.Moving
-                    )
-                {
-                    Merge(northEasternHexNeighbor);
-                }
-                else if (northWesternHexNeighbor != null &&
-                    HexGrid.Instance.Bubbles[northWesternHexNeighbor.Index] &&
-                    HexGrid.Instance.Bubbles[northWesternHexNeighbor.Index].Color == Color &&
-                    !northWesternHexNeighbor.Moving
-                    )
-                {
-                    Merge(northWesternHexNeighbor);
-                }
-                else if (northernHexNeighbor != null &&
-                    HexGrid.Instance.Bubbles[northernHexNeighbor.Index] &&
-                    HexGrid.Instance.Bubbles[northernHexNeighbor.Index].Color == Color &&
-                    !northernHexNeighbor.Moving)
-                {
-                    Merge(northernHexNeighbor);
-                }
+                Replace(northernHexNeighbor);
             }
-
+            else if (northEasternHexNeighbor != null &&
+                     HexGrid.Instance.Bubbles[northEasternHexNeighbor.Index] != null &&
+                     HexGrid.Instance.Bubbles[northEasternHexNeighbor.Index].Color == Color &&
+                     !northEasternHexNeighbor.Moving
+            )
+            {
+                Merge(northEasternHexNeighbor);
+            }
+            else if (northWesternHexNeighbor != null &&
+                     HexGrid.Instance.Bubbles[northWesternHexNeighbor.Index] &&
+                     HexGrid.Instance.Bubbles[northWesternHexNeighbor.Index].Color == Color &&
+                     !northWesternHexNeighbor.Moving
+            )
+            {
+                Merge(northWesternHexNeighbor);
+            }
+            else if (northernHexNeighbor != null &&
+                     HexGrid.Instance.Bubbles[northernHexNeighbor.Index] &&
+                     HexGrid.Instance.Bubbles[northernHexNeighbor.Index].Color == Color &&
+                     !northernHexNeighbor.Moving)
+            {
+                Merge(northernHexNeighbor);
+            }
         }
 
         public void Replace(HexCell neighbor)
@@ -90,13 +89,23 @@ namespace Assets.Scripts
                 Merging = true;
                 Target = neighbor.transform.position;
                 var bubble = HexGrid.Instance.Bubbles[neighbor.Index];
-                bubble.transform.localScale = Vector3.Lerp(bubble.transform.localScale,
-                    bubble.transform.localScale + transform.localScale * .5f, 0.25f);
+                var volume = (Count + bubble.Count) * 0.523598776f;
+                var diameter = (float)Math.Pow(volume * 0.75 / Math.PI, .3333333) * 2;
+                var scale = diameter * 15;
+                bubble.transform.localScale = new Vector3(scale, scale, scale);
+                bubble.Count += Count;
                 Move(neighbor);
             }
         }
 
         public void Pop()
+        {
+            HexGrid.Instance.Score += (int)Math.Pow(Count, 2) * 100;
+            HexGrid.Instance.DoParticles(transform, Color);
+            this.Destroy();
+        }
+
+        public void Destroy()
         {
             Destroy(this.gameObject);
         }

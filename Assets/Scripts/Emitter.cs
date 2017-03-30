@@ -22,7 +22,7 @@ public class Emitter : MonoBehaviour
 	    if (bubble == null)
 	    {
 	        Count++;
-	        if (Count == 10)
+	        if (Count == 5)
 	        {
 	            HexGrid.Instance.CreateBubble(Index, 0, Index);
 	            Count = 0;

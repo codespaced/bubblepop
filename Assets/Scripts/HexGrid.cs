@@ -21,6 +21,10 @@ public class HexGrid : Singleton<HexGrid>
     public Text CellLabelPrefab;
     public HexCell HexcellPrefab;
     public Emitter EmitterPrefab;
+    public int Score = 0;
+    public ParticleSystem ParticlePrefab;
+    private ParticleSystem _particleSystem;
+    private ParticleSystem.MainModule _particleSettings;
 
     public Color[] Colors = new Color[6];
     //private Canvas _gridCanvas;
@@ -46,7 +50,24 @@ public class HexGrid : Singleton<HexGrid>
         {
             CreateEmitter(x);
         }
+
+        _particleSystem = Instantiate(ParticlePrefab, new Vector3(0, 15, 0), Quaternion.identity) as ParticleSystem;
+        _particleSettings = _particleSystem.main;
     }
+
+    public void DoParticles(Transform tf, Color color)
+    {
+        _particleSystem.transform.position = tf.position + new Vector3(0, 25, 0);
+        //_particleSystem.transform.localScale = transform.localScale;
+        
+        //_particleSettings.startColor = color;
+        //_particleSystem.Stop();
+        Debug.Log("Before: " + _particleSystem.isPlaying);
+        _particleSystem.Play();
+        Debug.Log("After: " + _particleSystem.isPlaying);
+    }
+
+
 
     void Start()
     {
@@ -169,8 +190,8 @@ public class HexGrid : Singleton<HexGrid>
             {
                 TouchCell(hit);
             }
-        Debug.Log("touched at " + ray.origin + " : " + hit.point);
-        Debug.DrawLine(ray.origin, hit.point, Color.red);
+        //Debug.Log("touched at " + ray.origin + " : " + hit.point);
+        //Debug.DrawLine(ray.origin, hit.point, Color.red);
     }
 
     private void TouchCell(RaycastHit hit)

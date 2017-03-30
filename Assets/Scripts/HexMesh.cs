@@ -9,12 +9,12 @@ public class HexMesh : MonoBehaviour
     Mesh hexMesh;
     List<Vector3> vertices;
     List<int> triangles;
-    private MeshCollider meshCollider;
+    //private MeshCollider meshCollider;
     List<Color> colors;
     void Awake()
     {
         GetComponent<MeshFilter>().mesh = hexMesh = new Mesh();
-        meshCollider = gameObject.AddComponent<MeshCollider>();
+        //meshCollider = gameObject.AddComponent<MeshCollider>();
         hexMesh.name = "Hex Mesh";
         vertices = new List<Vector3>();
         colors = new List<Color>();
