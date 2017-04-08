@@ -75,6 +75,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ParticleSystemScript.cs" />
     <Compile Include="Assets\Scripts\Bubble.cs" />
     <Compile Include="Assets\Scripts\Emitter.cs" />
     <Compile Include="Assets\Scripts\HexCell.cs" />

@@ -57,14 +57,18 @@ public class HexGrid : Singleton<HexGrid>
 
     public void DoParticles(Transform tf, Color color)
     {
+        var old = GetComponent(typeof(ParticleSystem));
+        if (old != null)
+        {
+            old.SendMessage("Die");
+        }
+        //var ps = Instantiate(ParticlePrefab, new Vector3(0, 15, 0), Quaternion.identity) as ParticleSystem;
+        //var psm = ps.main;
         _particleSystem.transform.position = tf.position + new Vector3(0, 25, 0);
-        //_particleSystem.transform.localScale = transform.localScale;
-        
-        //_particleSettings.startColor = color;
-        //_particleSystem.Stop();
-        Debug.Log("Before: " + _particleSystem.isPlaying);
+        _particleSystem.transform.localScale = transform.localScale;
+
+        //psm.startColor = color;
         _particleSystem.Play();
-        Debug.Log("After: " + _particleSystem.isPlaying);
     }
 
 
