@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using Assets.Scripts;
 using UnityEngine;
@@ -6,9 +8,8 @@ using UnityEngine.UI;
 
 public class HexGrid : Singleton<HexGrid>
 {
-    //private static HexGrid _instance;
 
-    protected HexGrid() {}
+    protected HexGrid() { }
 
     public int Width = 6;
     public int Height = 6;
@@ -22,16 +23,20 @@ public class HexGrid : Singleton<HexGrid>
     public HexCell HexcellPrefab;
     public Emitter EmitterPrefab;
     public int Score = 0;
+    public int Moves = 0;
     public ParticleSystem ParticlePrefab;
+    public Queue<Point> Points;
     private ParticleSystem _particleSystem;
-    private ParticleSystem.MainModule _particleSettings;
 
     public Color[] Colors = new Color[6];
-    //private Canvas _gridCanvas;
+    private Canvas _gridCanvas;
+    private Text _popText;
+    private Vector3 _popTextPosition;
 
     void Awake()
     {
-        //_gridCanvas = GetComponentInChildren<Canvas>();
+        _gridCanvas = GetComponentInChildren<Canvas>();
+        _popText = _gridCanvas.GetComponentInChildren<Text>();
 
         Bubbles = new Bubble[Height * Width];
         Hexcells = new HexCell[Height * Width];
@@ -52,7 +57,7 @@ public class HexGrid : Singleton<HexGrid>
         }
 
         _particleSystem = Instantiate(ParticlePrefab, new Vector3(0, 15, 0), Quaternion.identity) as ParticleSystem;
-        _particleSettings = _particleSystem.main;
+        //_particleSettings = _particleSystem.main;
     }
 
     public void DoParticles(Transform tf, Color color)
@@ -62,20 +67,36 @@ public class HexGrid : Singleton<HexGrid>
         {
             old.SendMessage("Die");
         }
-        //var ps = Instantiate(ParticlePrefab, new Vector3(0, 15, 0), Quaternion.identity) as ParticleSystem;
-        //var psm = ps.main;
         _particleSystem.transform.position = tf.position + new Vector3(0, 25, 0);
         _particleSystem.transform.localScale = transform.localScale;
 
-        //psm.startColor = color;
         _particleSystem.Play();
     }
 
+    public void DoScoring(Transform tf, Color color, string points)
+    {
+        StartCoroutine(ShowMessage(points, color, tf, 1));
+    }
 
+    IEnumerator ShowMessage(string message, Color color, Transform tf, float delay)
+    {
+
+        _popTextPosition = tf.position + new Vector3(0, 25, 0);
+        _popText.text = message;
+        _popText.material.color = color;
+        _popText.transform.position = _popTextPosition;
+        _popText.enabled = true;
+        yield return new WaitForSeconds(delay);
+        if (_popText.transform.position == _popTextPosition)
+        {
+            _popText.enabled = false;
+        }
+        Console.WriteLine(_popTextPosition.ToString());
+
+    }
 
     void Start()
     {
-        //hexMesh.Triangulate(bubbles);
     }
 
 
@@ -100,12 +121,6 @@ public class HexGrid : Singleton<HexGrid>
         bubble.Coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
         bubble.Index = i;
         bubble.ChangeColor(Colors[UnityEngine.Random.Range(0, Colors.Length)]);
-
-        //Text label = Instantiate<Text>(cellLabelPrefab);
-        //label.rectTransform.SetParent(gridCanvas.transform, false);
-        //label.rectTransform.anchoredPosition =
-        //    new Vector2(position.x, position.z);
-        //label.text = bubble.coordinates.ToStringOnSeparateLines();
     }
 
     private void CreateHexcell(int x, int z, int i)
@@ -191,9 +206,9 @@ public class HexGrid : Singleton<HexGrid>
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
-            {
-                TouchCell(hit);
-            }
+        {
+            TouchCell(hit);
+        }
         //Debug.Log("touched at " + ray.origin + " : " + hit.point);
         //Debug.DrawLine(ray.origin, hit.point, Color.red);
     }
@@ -205,6 +220,14 @@ public class HexGrid : Singleton<HexGrid>
             var obj = hit.collider.gameObject;
             obj.SendMessage("Pop");
         }
+    }
+
+
+    public class Point
+    {
+        public Transform Transform;
+        public String Text;
+        public Color Color;
     }
 
 }
